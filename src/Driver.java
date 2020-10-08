@@ -26,30 +26,35 @@ public class Driver {
         ThreadGroup rushHour = new ThreadGroup("rushHour");
         ThreadGroup slowTime = new ThreadGroup("slowTime");
 
-        // create a Random number generator and Scanner (Random( )
+        // create a Random number generator for milliseconds during slow time
         Random rand = new Random();
-        // Scanner(System.in))
+        int n = rand.nextInt(5000);
+        n += 50;
+        // Create scanner object for user input
         Scanner input = new Scanner(System.in);
 
-        // Create the two threadgroups for rushhour and slowtime. (is this necessary?)
-
-        // declare an array of 100 Customer threads
+        // declare and instantiate array of 100 Customer threads
         Customer[] customerArr = new Customer[100];
 
         // instantiate a new Waiter object passing it the Nap and Servicing semaphores.
         Waiter waiter = new Waiter(nap, servicing);
 
-        // Declare and instantiate an array of 100 Customer objects/threads.
-
         //Walk through the first 50 cells of the array and create 50 Customer object/threads
         // passing them the first ThreadGroup rushhour the Door, Servicing and Nap
         // semaphores.
+        for (int i = 0; i < 50; i++) {
+            customerArr[0] = new Customer(rushHour, door, servicing, nap);
+        }
         // Next, walk through remaining 50 doing the same but passing the second
         // ThreadGroup slowtime.
+        for (int i = 50; i < 100; i++) {
+            customerArr[0] = new Customer(slowTime, door, servicing, nap);
+        }
 
         // prompt user to hit enter to start rush hour simulation
-        System.out.println("Please press Enter to start rush hour simulation");
-        input.hasNext();
+        System.out.print("Please press Enter to start rush hour simulation: ");
+        // This method call effectively blocks for i/o, controlling the execution of the driver program
+        input.nextLine();
 
         // Start up the Waiter object/thread.       YOU MUST START WAITER FIRST!
         waiter.start();
@@ -57,6 +62,9 @@ public class Driver {
         // sleep for 1 second and then walk through and start up the first 50 customers
         try {
             Thread.sleep(1000);
+            for (int i = 0; i < 50; i++) {
+                customerArr[0].start();
+            }
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -67,11 +75,27 @@ public class Driver {
         }
 
         // prompt user to hit enter for slow time simulation
+        System.out.print("Please press Enter to start slow time simulation: ");
+        // This method call effectively blocks for i/o, controlling the execution of the driver program
+        input.nextLine();
 
         // walk through second 50 customer objects and start them BUT this
         // time wait from a random 50-500 milliseconds between each start.
+        for (int i = 50; i < 100; i++) {
+            customerArr[0].start();
+            try {
+                // Sleep anywhere from 50-5000 milliseconds in between starts
+                Thread.sleep(n);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
 
         // wait for the second ThreadGroup’s activeCount( ) to reach zero
+        while (slowTime.activeCount() > 0) {
+            ; // busy wait
+        }
         // then interrupt the Waiter object and the program will end.
+        waiter.interrupt();
     }
 }
