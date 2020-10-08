@@ -19,16 +19,27 @@ public class Customer extends Thread {
 
     public void  run( )  {
         //this is the method that will execute when driver “starts” thread
+        // Attempt to enter the restaurant
         try {
-            System.out.println("Customer attempting to enter restaurant");
+            System.out.println("New customer attempting to enter restaurant");
             door.acquire();
-            System.out.println("Customer X has entered the restaurant and is seated");
+            System.out.println("Customer " + this.getName().substring(7) + " has entered the restaurant and is seated");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         // if this thread is first to enter then release the Nap semaphore.
+        nap.release();
         // acquire from Servicing Semaphore to wait for service.
+        try {
+            System.out.println("Customer " + this.getName().substring(7) + " is waiting for the server");
+            servicing.acquire();
+            System.out.println("Customer " + this.getName().substring(7) + " has been served");
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         // now ready to leave so execute a release on the Door Semaphore.
+        System.out.println("Customer " + this.getName().substring(7) + " is leaving");
+        door.release();
     }
 
 }

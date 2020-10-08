@@ -16,12 +16,21 @@ public class Waiter extends Thread {
         do {
             // tryacquire on the Nap Semaphore  (might go to sleep here)
             if (nap.tryAcquire()) {
-
-            } else {
+                // service
                 try {
-                    nap.acquire();
+                    // Simulate service with sleep
+                    System.out.println("Waiter is servicing customer X");
+                    Thread.sleep(100);
+                    servicing.release();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+            } else {
+                try {
+                    System.out.println("Waiter is sleeping");
+                    nap.acquire();
+                } catch (InterruptedException e) {
+                    System.out.println("Waiter is now awake");
                 }
             }
             // if tryacquire returns false then execute acquire on Nap Semaphore to sleep.

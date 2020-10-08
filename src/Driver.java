@@ -28,8 +28,6 @@ public class Driver {
 
         // create a Random number generator for milliseconds during slow time
         Random rand = new Random();
-        int n = rand.nextInt(5000);
-        n += 50;
         // Create scanner object for user input
         Scanner input = new Scanner(System.in);
 
@@ -43,12 +41,12 @@ public class Driver {
         // passing them the first ThreadGroup rushhour the Door, Servicing and Nap
         // semaphores.
         for (int i = 0; i < 50; i++) {
-            customerArr[0] = new Customer(rushHour, door, servicing, nap);
+            customerArr[i] = new Customer(rushHour, door, servicing, nap);
         }
         // Next, walk through remaining 50 doing the same but passing the second
         // ThreadGroup slowtime.
         for (int i = 50; i < 100; i++) {
-            customerArr[0] = new Customer(slowTime, door, servicing, nap);
+            customerArr[i] = new Customer(slowTime, door, servicing, nap);
         }
 
         // prompt user to hit enter to start rush hour simulation
@@ -63,7 +61,7 @@ public class Driver {
         try {
             Thread.sleep(1000);
             for (int i = 0; i < 50; i++) {
-                customerArr[0].start();
+                customerArr[i].start();
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -82,9 +80,11 @@ public class Driver {
         // walk through second 50 customer objects and start them BUT this
         // time wait from a random 50-500 milliseconds between each start.
         for (int i = 50; i < 100; i++) {
-            customerArr[0].start();
+            customerArr[i].start();
             try {
-                // Sleep anywhere from 50-5000 milliseconds in between starts
+                // Sleep anywhere from 50-5000 milliseconds in between start
+                int n = rand.nextInt(5000);
+                n += 50;
                 Thread.sleep(n);
             } catch (InterruptedException e) {
                 e.printStackTrace();
