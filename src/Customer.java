@@ -22,17 +22,21 @@ public class Customer extends Thread {
         // Attempt to enter the restaurant
         try {
             System.out.println("New customer attempting to enter restaurant");
-            door.acquire();
+            door.acquire(); // Wait on open seat
             System.out.println("Customer " + this.getName().substring(7) + " has entered the restaurant and is seated");
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         // if this thread is first to enter then release the Nap semaphore.
-        nap.release();
+        if (!nap.tryAcquire()) {
+            nap.release();
+        }
+
         // acquire from Servicing Semaphore to wait for service.
         try {
             System.out.println("Customer " + this.getName().substring(7) + " is waiting for the server");
-            servicing.acquire();
+            servicing.acquire(); // Wait for service
             System.out.println("Customer " + this.getName().substring(7) + " has been served");
         } catch (InterruptedException e) {
             e.printStackTrace();
