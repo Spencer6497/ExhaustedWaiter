@@ -15,34 +15,29 @@ public class Waiter extends Thread {
 
     public void run() {
         do {
-            // tryacquire on the Nap Semaphore  (might go to sleep here)
-            // Return true if customers waiting (nap = 1)
-            if (nap.tryAcquire()) {
-                // Perform service
-                try {
-                    // Simulate service with sleep
+            try {
+                // Try to take a nap
+                if (nap.tryAcquire()) {
+                    // Customers waiting, start servicing
                     System.out.println("Waiter is servicing customer X");
+                    // Simulate service
                     Thread.sleep(100);
                     servicing.release();
-                } catch (InterruptedException e) {
-                    // This block should never occur
-                    System.out.println("Waiter INTERRUPTED -- ERROR");
-                    e.printStackTrace();
+                } else {
+                    // No customers waiting, ok to take nap
+                    System.out.println("Waiter is SLEEPING");
+                    nap.acquire();
+                    System.out.println("Waiter is now AWAKE");
+                    // Customers waiting, start servicing
+                    System.out.println("Waiter is servicing customer X");
+                    // Simulate service
+                    Thread.sleep(100);
+                    servicing.release();
                 }
-            // Return false if no customers waiting (nap = 0)
-            } else {
-                try {
-                    System.out.println("Waiter is sleeping");
-                    nap.acquire(); // if waiter acquires nap semaphore, that means a customer has awoken him
-                    System.out.println("Waiter is now awake");
-                    // Go to top of do-while loop
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            } catch (InterruptedException e) {
+                System.out.println("\nEND OF SIMULATION");
+                break;
             }
-            // if tryacquire returns false then execute acquire on Nap Semaphore to sleep.
-            // sleep for 50-500 milliseconds to simulate preparation and service
-            // release the Servicing Semaphore.
         } while(true);
     }
 }

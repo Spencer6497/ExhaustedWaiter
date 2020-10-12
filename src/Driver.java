@@ -75,7 +75,7 @@ public class Driver {
         // Added the following line to pause execution of the print statement until after rush hour is over
         input.nextLine();
         // prompt user to hit enter for slow time simulation
-        System.out.print("Please press Enter to start slow time simulation: ");
+        System.out.print("\nPlease press Enter to start slow time simulation: ");
         // This method call effectively blocks for i/o, controlling the execution of the driver program
         input.nextLine();
 
@@ -84,7 +84,7 @@ public class Driver {
         for (int i = 50; i < 100; i++) {
             customerArr[i].start();
             try {
-                // Sleep anywhere from 50-5000 milliseconds in between start
+                // Sleep anywhere from 50-500 milliseconds in between start
                 int n = rand.nextInt(500);
                 n += 50;
                 Thread.sleep(n);
