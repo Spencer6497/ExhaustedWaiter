@@ -2,7 +2,7 @@
 Spencer Peace
 CSC 460-001
 Dr. Gary Newell
-Due 10/12/2020
+Due 10/16/2020
  */
 
 import java.util.*;
@@ -72,8 +72,6 @@ public class Driver {
             ; // busy wait
         }
 
-        // Added the following line to pause execution of the print statement until after rush hour is over
-        input.nextLine();
         // prompt user to hit enter for slow time simulation
         System.out.print("\nPlease press Enter to start slow time simulation: ");
         // This method call effectively blocks for i/o, controlling the execution of the driver program

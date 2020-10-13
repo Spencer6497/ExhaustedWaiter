@@ -1,11 +1,10 @@
-// imports
-
 import java.util.Collection;
 import java.util.concurrent.Semaphore;
 
 public class Waiter extends Thread {
     // declare private variables to hold values passed to constructor
     private volatile Semaphore nap, servicing;
+    private static int customerNum = 0;
 
     // Constructor which takes two Semaphore objects (Nap and Servicing)
     Waiter(Semaphore nap, Semaphore servicing) {
@@ -19,9 +18,9 @@ public class Waiter extends Thread {
                 // Try to take a nap
                 if (nap.tryAcquire()) {
                     // Customers waiting, start servicing
-                    System.out.println("Waiter is servicing customer X");
-                    // Simulate service
                     Thread.sleep(100);
+                    customerNum++;
+                    System.out.println("Waiter is servicing customer " + customerNum);
                     servicing.release();
                 } else {
                     // No customers waiting, ok to take nap
@@ -29,9 +28,9 @@ public class Waiter extends Thread {
                     nap.acquire();
                     System.out.println("Waiter is now AWAKE");
                     // Customers waiting, start servicing
-                    System.out.println("Waiter is servicing customer X");
-                    // Simulate service
                     Thread.sleep(100);
+                    customerNum++;
+                    System.out.println("Waiter is servicing customer " + customerNum);
                     servicing.release();
                 }
             } catch (InterruptedException e) {
